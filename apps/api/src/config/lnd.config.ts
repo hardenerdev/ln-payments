@@ -1,13 +1,19 @@
 interface LndConfig {
-  lndSocket: string | undefined;
-  lndMacaroon: string | undefined;
-  lndTls: string | undefined;
+  receiverSocket: string | undefined;
+  receiverMacaroon: string | undefined;
+  receiverCert: string | undefined;
+  senderSocket: string | undefined;
+  senderMacaroon: string | undefined;
+  senderCert: string | undefined;
 };
 
 const lndConfig: LndConfig = {
-  lndSocket: process.env.LND_SOCKET,
-  lndMacaroon: process.env.LND_MACAROON_PATH,
-  lndTls: process.env.LND_TLS_PATH,
+  receiverSocket: process.env.RECEIVER_SOCKET,
+  receiverCert: process.env.RECEIVER_CERT,
+  receiverMacaroon: process.env.RECEIVER_MACAROON,
+  senderSocket: process.env.SENDER_SOCKET,
+  senderCert: process.env.SENDER_CERT,
+  senderMacaroon: process.env.SENDER_MACAROON,
 };
 
 export default lndConfig;
