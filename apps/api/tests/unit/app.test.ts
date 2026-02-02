@@ -11,7 +11,7 @@ describe("GET /health", () => {
 
 describe("GET non existing path", () => {
   test("returns status code 404 when route does not exists", async () => {
-    const respoanse = await request(app)
+    const response = await request(app)
       .get('/mock')
       .expect(404);
   });
