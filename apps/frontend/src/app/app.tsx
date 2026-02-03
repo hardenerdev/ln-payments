@@ -5,20 +5,26 @@ import { QR } from "../components/qr";
 export function App() {
   const [amount, setAmount] = useState(1000);
   const [memo, setMemo] = useState('Test payment');
-  const [invoice, setInvoice] = useState('');
-  const [result, setResult] = useState<any>(null);
+  const [invoice, setInvoice] = useState({
+    amount: '',
+    description: '',
+    hash: '',
+    expiry: '',
+    paymentRequest: '',
+  });
+  const [payment, setPayment] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   const handleCreateInvoice = async () => {
     setLoading(true);
-    const res = await createInvoice(amount, memo);
-    setInvoice(res.paymentRequest);
+    const invoice = await createInvoice(amount, memo);
+    setInvoice(invoice);
     setLoading(false);
   };
   const handlePayInvoice = async () => {
     setLoading(true);
-    const res = await payInvoice(invoice);
-    setResult(res);
+    const payment = await payInvoice(invoice.paymentRequest);
+    setPayment(payment);
     setLoading(false);
   };
 
@@ -46,23 +52,21 @@ export function App() {
         </button>
       </section>
 
-      {invoice && (
+      {invoice.paymentRequest != '' && (
         <section>
           <h2>Invoice</h2>
-          <p style={{ marginTop: 12, wordBreak: "break-all" }}>
-            {invoice}
-          </p>
-          <QR invoice={invoice} />
+          <pre>{JSON.stringify(invoice, null, 2)}</pre>
+          <QR invoice={invoice.paymentRequest} />
           <button onClick={handlePayInvoice} disabled={loading}>
             Pay invoice
           </button>
         </section>
       )}
 
-      {result && (
+      {payment && (
         <section>
           <h2>Payment Result</h2>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+          <pre>{JSON.stringify(payment, null, 2)}</pre>
         </section>
       )}
     </div>

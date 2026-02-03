@@ -1,7 +1,7 @@
 import { QRCodeSVG } from "qrcode.react";
 
 type InvoiceQrProps = {
-  invoice: string; // lnbc1...
+  invoice: string;
   size?: number;
 };
 

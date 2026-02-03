@@ -4,6 +4,7 @@ import {
 } from 'express';
 import {
   createInvoice,
+  decodePaymentRequest,
   getInvoice,
   getPayment,
   pay,
@@ -43,6 +44,11 @@ export const generateInvoice = async (req: Request, res: Response) => {
       description: memo,
     });
 
+    const decodedPayment = await decodePaymentRequest({
+      request: invoice.request,
+      lnd: nodes.receiver.lnd
+    });
+    
     await pool.query(insertInvoice, [
       invoice.id,
       invoice.created_at,
@@ -53,8 +59,11 @@ export const generateInvoice = async (req: Request, res: Response) => {
     ]);
 
     res.json({
+      amount: decodedPayment.tokens,
+      description: decodedPayment.description,
+      hash: decodedPayment.id,
+      expiry: decodedPayment.expires_at,
       paymentRequest: invoice.request,
-      hash: invoice.id
     });
   } catch (e) {
     res.status(500).json({
