@@ -8,17 +8,30 @@ import {
   getPayment,
   pay,
   PayResult,
-} from "lightning";
+  subscribeToInvoices,
+} from 'lightning';
 import {
   nodes
-} from "../services/lnd.services";
+} from '../services/lnd.services';
 import pool from '../db/postgres';
 import {
   insertInvoice,
   insertPayment,
   getInvoices,
   getPayments,
+  updatePayment,
 } from '../db/queries/postgres.queries';
+
+const invoicesUpdate = subscribeToInvoices({
+  lnd: nodes.receiver.lnd,
+});
+
+invoicesUpdate.on('invoice_updated', async (invoice) => {
+  await pool.query(updatePayment, [
+    invoice.created_at,
+    invoice.id,
+  ]);
+});
 
 export const generateInvoice = async (req: Request, res: Response) => {
   const { amount, memo } = req.body;

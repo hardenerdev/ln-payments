@@ -10,7 +10,7 @@ app.get('/health', (req, res) => {
   res.json({ error: 'API up and running!' });
 });
 
-app.all("/{*splat}", (req, res) => {
+app.all('/{*splat}', (req, res) => {
   res.status(404).send();
 });
 

@@ -12,7 +12,7 @@ const pool = new Pool({
 async function checkConnection(): Promise<void> {
   try {
     const client = await pool.connect();
-    console.log('Connected to postgresql');
+    console.log('Connected to postgres');
     client.release();
   } catch (error) {
     console.error(`cannot connect to psql due to ${error}`);

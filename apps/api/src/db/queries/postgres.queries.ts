@@ -13,3 +13,7 @@ export const getInvoices =
 export const getPayments =
   `SELECT * FROM payments`
 ;
+
+export const updatePayment =
+  `UPDATE payments SET confirmed_at = $1 WHERE id = $2`
+;
