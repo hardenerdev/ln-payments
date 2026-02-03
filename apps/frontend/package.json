@@ -1,0 +1,8 @@
+{
+  "name": "@ln-payments/frontend",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "qrcode.react": "^4.2.0"
+  }
+}

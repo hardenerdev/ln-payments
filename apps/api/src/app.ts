@@ -1,8 +1,10 @@
 import express, { Express } from 'express';
+import cors from 'cors';
 import lightningRouter from './routes/lightning.routes';
 
 const app: Express = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(lightningRouter);
 
