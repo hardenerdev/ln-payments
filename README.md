@@ -91,7 +91,7 @@ Each service has its own `.env.example` environment file. This examples will wor
 
 > Note: above hostnames are resolved internally to the attached Docker network. If yoy have any other Polar network running minor changes will be required to fit `RECEIVER_SOCKET`, `SENDER_SOCKET` and network at [compose.yaml](./compose.yaml) assigning the correct `id` to `polar-n<id>-bob`, `polar-n<id>-alice` and `polar-network-<id>_default` respectively. Check can be done executing `docker ps` and looking for polar sevices.
 
-* [`apps/frontend/.env.example`](./apps/api/.env.example) - Please refer to [frontend README](./apps/frontend/README.md).
+* [`apps/frontend/.env.example`](./apps/frontend/.env.example) - Please refer to [frontend README](./apps/frontend/README.md).
 
 | Name | Description | Default |
 |---|---|---|
