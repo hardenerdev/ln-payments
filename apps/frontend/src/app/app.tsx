@@ -16,13 +16,13 @@ export function App() {
   });
   const [payment, setPayment] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [payed, setPayed] = useState(false);
+  const [payed, setPayed] = useState('☠️ Invoice not payed');
 
   useEffect(() => {
     const socket = io(appConfig.apiUrl);
 
     socket.on('invoice:paid', () => {
-      setPayed(true);
+      setPayed('⚡ Congrats, invoice payed!');
     });
   });
 
@@ -31,7 +31,7 @@ export function App() {
     const invoice = await createInvoice(amount, memo);
     setInvoice(invoice);
     setLoading(false);
-    setPayed(false);
+    setPayed('☠️ Invoice not payed');
   };
   const handlePayInvoice = async () => {
     setLoading(true);
@@ -64,6 +64,10 @@ export function App() {
         </button>
       </section>
 
+      <section>
+        <h2>{payed}</h2>
+      </section>
+
       {invoice.paymentRequest != '' && (
         <section>
           <h2>Invoice</h2>
@@ -79,12 +83,6 @@ export function App() {
         <section>
           <h2>Payment Result</h2>
           <pre>{JSON.stringify(payment, null, 2)}</pre>
-        </section>
-      )}
-
-      {payed && (
-        <section>
-          <h2>⚡ Congrats, invoice payed!</h2>
         </section>
       )}
     </div>
