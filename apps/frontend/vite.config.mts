@@ -7,11 +7,11 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/apps/frontend',
   server: {
     port: 4000,
-    host: 'localhost',
+    host: '0.0.0.0',
   },
   preview: {
     port: 4000,
-    host: 'localhost',
+    host: '0.0.0.0',
   },
   plugins: [react()],
   // Uncomment this if you are using workers.
@@ -26,4 +26,5 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
   },
+  host: true,
 }));

@@ -2,6 +2,10 @@
   "name": "@ln-payments/frontend",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "qrcode.react": "^4.2.0"
   }
