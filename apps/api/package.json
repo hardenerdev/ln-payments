@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@types/cors": "^2.8.19",
+    "@types/express-validator": "^2.20.33",
     "@types/pg": "^8.16.0",
     "@types/socket.io": "^3.0.1",
     "cors": "^2.8.6",
     "express": "^4.21.2",
+    "express-validator": "^7.3.1",
     "lightning": "^11.0.0",
     "pg": "^8.18.0",
     "socket.io": "^4.8.3",
