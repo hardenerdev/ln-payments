@@ -278,6 +278,5 @@ nx test api
 
 - [ ] balance endpoint.
 - [ ] connect to node endpoint.
-- [ ] databse refactor to be a class.
 - [ ] only one pg table?
 - [ ] error handling
