@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import { createInvoice, payInvoice } from "./api";
 import { QR } from "../components/qr";
+import appConfig from "../config/app.config";
 
 export function App() {
   const [amount, setAmount] = useState(1000);
@@ -14,12 +16,22 @@ export function App() {
   });
   const [payment, setPayment] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [payed, setPayed] = useState(false);
+
+  useEffect(() => {
+    const socket = io(appConfig.apiUrl);
+
+    socket.on('invoice:paid', () => {
+      setPayed(true);
+    });
+  });
 
   const handleCreateInvoice = async () => {
     setLoading(true);
     const invoice = await createInvoice(amount, memo);
     setInvoice(invoice);
     setLoading(false);
+    setPayed(false);
   };
   const handlePayInvoice = async () => {
     setLoading(true);
@@ -67,6 +79,12 @@ export function App() {
         <section>
           <h2>Payment Result</h2>
           <pre>{JSON.stringify(payment, null, 2)}</pre>
+        </section>
+      )}
+
+      {payed && (
+        <section>
+          <h2>⚡ Congrats, invoice payed!</h2>
         </section>
       )}
     </div>

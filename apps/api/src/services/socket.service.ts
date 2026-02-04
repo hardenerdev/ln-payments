@@ -21,7 +21,7 @@ class SocketService {
   public init(httpServer: HttpServer) {
     this.io = new SocketIO(httpServer, {
       cors: {
-        origin: `http://localhost:${appConfig.port}`,
+        origin: `http://localhost:${appConfig.uiPort}`,
         methods: ['GET', 'POST'],
       }
     });

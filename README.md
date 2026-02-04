@@ -87,6 +87,7 @@ Each service has its own `.env.example` environment file. This examples will wor
 | SENDER_MACAROON | Sender HEX encoded admin macaroon | Some admin macaroon |
 | SENDER_PUBLIC_KEY | Sender public key | Some public key |
 | POSTGRES_HOST | Postgre host to connect with | postgres |
+| UI_PORT | UI listen port to enable socket.io CORS | 4000 |
 
 > Note: above hostnames are resolved internally to the attached Docker network. If yoy have any other Polar network running minor changes will be required to fit `RECEIVER_SOCKET`, `SENDER_SOCKET` and network at [compose.yaml](./compose.yaml) assigning the correct `id` to `polar-n<id>-bob`, `polar-n<id>-alice` and `polar-network-<id>_default` respectively. Check can be done executing `docker ps` and looking for polar sevices.
 
