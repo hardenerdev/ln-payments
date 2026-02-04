@@ -22,6 +22,9 @@ import {
   getPayments,
   updatePayment,
 } from '../db/queries/postgres.queries';
+import SocketService from '../services/socket.service';
+
+const socket = SocketService.getInstance();
 
 const invoicesUpdate = subscribeToInvoices({
   lnd: nodes.receiver.lnd,
@@ -29,9 +32,15 @@ const invoicesUpdate = subscribeToInvoices({
 
 invoicesUpdate.on('invoice_updated', async (invoice) => {
   await pool.query(updatePayment, [
-    invoice.created_at,
+    invoice.confirmed_at,
     invoice.id,
   ]);
+
+  // emit after writing to database to ensure data consistency
+  socket.emitEvent('invoice:updated', {
+    id: invoice.id,
+    confirmed: invoice.confirmed_at,
+  });
 });
 
 export const generateInvoice = async (req: Request, res: Response) => {
@@ -58,13 +67,18 @@ export const generateInvoice = async (req: Request, res: Response) => {
       invoice.request,
     ]);
 
-    res.json({
+    const response = {
       amount: decodedPayment.tokens,
       description: decodedPayment.description,
       hash: decodedPayment.id,
       expiry: decodedPayment.expires_at,
       paymentRequest: invoice.request,
-    });
+    };
+
+    // emit after writing to database to ensure data consistency
+    socket.emitEvent('invoice:created', response);
+
+    res.json(response);
   } catch (e) {
     res.status(500).json({
       error: e
@@ -106,11 +120,16 @@ export const payment = async (req: Request, res: Response) => {
       payment.secret,
     ]);
 
-    res.json({
+    const response = {
       fee: payment.fee,
       preimage: payment.secret,
       hash: payment.id,
-    });
+    };
+
+    // emit after writing to database to ensure data consistency
+    socket.emitEvent('invoice:paid', response);
+
+    res.json(response);
   } catch (e) {
     res.status(500).json({
       error: e

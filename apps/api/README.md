@@ -277,7 +277,6 @@ nx test api
 
 - [ ] balance endpoint.
 - [ ] connect to node endpoint.
-- [ ] real time updates with [socket.io](https://www.npmjs.com/package/socket.io).
 - [ ] databse refactor to be a class.
 - [ ] input validation with [express-validator](https://www.npmjs.com/package/express-validator).
 - [ ] only one pg table?
