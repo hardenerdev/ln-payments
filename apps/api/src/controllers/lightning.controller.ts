@@ -3,6 +3,7 @@ import {
   Response,
 } from 'express';
 import {
+  authenticatedLndGrpc,
   createInvoice,
   decodePaymentRequest,
   getInvoice,
@@ -44,11 +45,18 @@ invoicesUpdate.on('invoice_updated', async (invoice) => {
 });
 
 export const generateInvoice = async (req: Request, res: Response) => {
-  const { amount, memo } = req.body;
+  const { amount, memo, nodeUrl, nodeCert, nodeMacaroon } = req.body;
+  console.log(req.body)
 
   try {
+    const { lnd } = authenticatedLndGrpc({
+      socket: nodeUrl,
+      cert: nodeCert,
+      macaroon: nodeMacaroon,
+    });
+
     const invoice = await createInvoice({
-      lnd: nodes.receiver.lnd,
+      lnd: lnd,
       tokens: amount,
       description: memo,
     });
@@ -102,16 +110,22 @@ export const getInvoiceByHash = async (req: Request, res: Response) => {
 };
 
 export const payment = async (req: Request, res: Response) => {
-  const { paymentRequest } = req.body;
+  const { paymentRequest, nodeUrl, nodeCert, nodeMacaroon } = req.body;
 
   try {
+    const { lnd } = authenticatedLndGrpc({
+      socket: nodeUrl,
+      cert: nodeCert,
+      macaroon: nodeMacaroon,
+    });
+
     const decodedPayment = await decodePaymentRequest({
       request: paymentRequest,
       lnd: nodes.receiver.lnd
     });
 
     const payment: PayResult = await pay({
-      lnd: nodes.sender.lnd,
+      lnd: lnd,
       request: paymentRequest,
     });
 

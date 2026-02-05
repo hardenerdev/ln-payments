@@ -34,6 +34,5 @@ nx serve frontend
 
 ## to do
 
-- [ ] configure node connection
 - [ ] error handling
 - [ ] styling

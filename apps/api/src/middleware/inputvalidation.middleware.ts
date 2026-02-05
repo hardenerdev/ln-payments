@@ -29,6 +29,18 @@ export const validateGenerateInvoice = [
     .isString()
     .trim()
     .withMessage('Memo is a description string'),
+  body('nodeUrl')
+    .isString()
+    .trim()
+    .withMessage('Node URL required'),
+  body('nodeCert')
+    .isString()
+    .trim()
+    .withMessage('Node TLS cert required'),
+  body('nodeMacaroon')
+    .isString()
+    .trim()
+    .withMessage('Node macaroon required'),
   handleValidationErrors,
 ];
 
@@ -47,5 +59,17 @@ export const validatePayment = [
     .trim()
     .notEmpty()
     .withMessage('Payment request cannot be empty string'),
+  body('nodeUrl')
+    .isString()
+    .trim()
+    .withMessage('Node URL required'),
+  body('nodeCert')
+    .isString()
+    .trim()
+    .withMessage('Node TLS cert required'),
+  body('nodeMacaroon')
+    .isString()
+    .trim()
+    .withMessage('Node macaroon required'),
   handleValidationErrors,
 ];

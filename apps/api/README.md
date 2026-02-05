@@ -277,6 +277,5 @@ nx test api
 ## to do
 
 - [ ] balance endpoint.
-- [ ] connect to node endpoint.
 - [ ] only one pg table?
 - [ ] error handling

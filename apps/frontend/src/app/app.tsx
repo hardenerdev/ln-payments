@@ -7,6 +7,12 @@ import appConfig from "../config/app.config";
 export function App() {
   const [amount, setAmount] = useState(1000);
   const [memo, setMemo] = useState('Test payment');
+  const [emitterUrl, setEmitterUrl] = useState(appConfig.emitterUrl);
+  const [emitterCert, setEmitterCert] = useState(appConfig.emitterCert);
+  const [emitterMacaroon, setEmitterMacaroon] = useState(appConfig.emitterMacaroon);
+  const [payerUrl, setPayerUrl] = useState(appConfig.payerUrl);
+  const [payerCert, setPayerCert] = useState(appConfig.payerCert);
+  const [payerMacaroon, setPayerMacaroon] = useState(appConfig.payerMacaroon);
   const [invoice, setInvoice] = useState({
     amount: '',
     description: '',
@@ -28,14 +34,25 @@ export function App() {
 
   const handleCreateInvoice = async () => {
     setLoading(true);
-    const invoice = await createInvoice(amount, memo);
+    const invoice = await createInvoice(
+      amount,
+      memo,
+      emitterUrl,
+      emitterCert,
+      emitterMacaroon,
+    );
     setInvoice(invoice);
     setLoading(false);
     setPayed('☠️ Invoice not payed');
   };
   const handlePayInvoice = async () => {
     setLoading(true);
-    const payment = await payInvoice(invoice.paymentRequest);
+    const payment = await payInvoice(
+      invoice.paymentRequest,
+      payerUrl,
+      payerCert,
+      payerMacaroon
+    );
     setPayment(payment);
     setLoading(false);
   };
@@ -58,6 +75,21 @@ export function App() {
           onChange={e => setMemo(e.target.value)}
           placeholder="Memo"
         />
+        <input
+          value={emitterUrl}
+          onChange={e => setEmitterUrl(e.target.value)}
+          placeholder="Node URL"
+        />
+        <input
+          value={emitterCert}
+          onChange={e => setEmitterCert(e.target.value)}
+          placeholder="HEX encoded node TLC certificate"
+        />
+        <input
+          value={emitterMacaroon}
+          onChange={e => setEmitterMacaroon(e.target.value)}
+          placeholder="HEX encoded node macaroon"
+        />
 
         <button onClick={handleCreateInvoice} disabled={loading}>
           Create invoice
@@ -73,6 +105,21 @@ export function App() {
           <h2>Invoice</h2>
           <pre>{JSON.stringify(invoice, null, 2)}</pre>
           <QR invoice={invoice.paymentRequest} />
+          <input
+            value={payerUrl}
+            onChange={e => setPayerUrl(e.target.value)}
+            placeholder="Node URL"
+          />
+          <input
+            value={payerCert}
+            onChange={e => setPayerCert(e.target.value)}
+            placeholder="HEX encoded node TLC certificate"
+          />
+          <input
+            value={payerMacaroon}
+            onChange={e => setPayerMacaroon(e.target.value)}
+            placeholder="HEX encoded node macaroon"
+          />
           <button onClick={handlePayInvoice} disabled={loading}>
             Pay invoice
           </button>
