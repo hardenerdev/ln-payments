@@ -32,7 +32,13 @@ describe('Lightning routes', () => {
 
       const response = await request(app)
         .post('/api/invoice')
-        .send({ amount: 1000, memo: 'Test invoice' })
+        .send({
+          amount: 1000,
+          memo: 'Test invoice',
+          nodeUrl: 'Node URL',
+          nodeCert: 'Node cert',
+          nodeMacaroon: 'Node macaroon',
+        })
         .expect(200);
 
       expect(response.body).toEqual(mockInvoiceData);
@@ -48,7 +54,13 @@ describe('Lightning routes', () => {
 
       const response = await request(app)
         .post('/api/invoice')
-        .send({ amount: 1000, memo: 'Test invoice' })
+        .send({
+          amount: 1000,
+          memo: 'Test invoice',
+          nodeUrl: 'Node URL',
+          nodeCert: 'Node cert',
+          nodeMacaroon: 'Node macaroon',
+        })
         .expect(500);
 
       expect(response.body).toEqual(mockError);
@@ -62,9 +74,12 @@ describe('Lightning routes', () => {
       const response = await request(app)
         .post('/api/invoice')
         .send({})
-        .expect(200);
-
-      expect(mockedGenerateInvoice).toHaveBeenCalledTimes(1);
+        .expect(400);
+      
+      expect(response.body).toHaveProperty('errors');
+      expect(response.body.errors[0]).toMatchObject({
+        msg: 'Amount > 0',
+      });
     });
   });
 
@@ -120,7 +135,12 @@ describe('Lightning routes', () => {
 
       const response = await request(app)
         .post('/api/payment')
-        .send({ paymentRequest: 'lnbc1000n1...' })
+        .send({
+          paymentRequest: 'lnbc1000n1...',
+          nodeUrl: 'Node URL',
+          nodeCert: 'Node cert',
+          nodeMacaroon: 'Node macaroon',
+        })
         .expect(200);
 
       expect(response.body).toEqual(mockPaymentData);
@@ -136,7 +156,12 @@ describe('Lightning routes', () => {
 
       const response = await request(app)
         .post('/api/payment')
-        .send({ paymentRequest: 'invalid_request' })
+        .send({
+          paymentRequest: 'invalid_request',
+          nodeUrl: 'Node URL',
+          nodeCert: 'Node cert',
+          nodeMacaroon: 'Node macaroon',
+        })
         .expect(500);
 
       expect(response.body).toEqual(mockError);
@@ -150,9 +175,12 @@ describe('Lightning routes', () => {
       const response = await request(app)
         .post('/api/payment')
         .send({})
-        .expect(200);
+        .expect(400);
 
-      expect(mockedPayment).toHaveBeenCalledTimes(1);
+      expect(response.body).toHaveProperty('errors');
+      expect(response.body.errors[1]).toMatchObject({
+        msg: 'Payment request cannot be empty string',
+      });
     });
   });
 
