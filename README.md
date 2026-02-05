@@ -110,6 +110,10 @@ Please, modify to fit your needs.
 To launch services launch compose file:
 
 ```bash
+cp .env.example .env
+cp apps/api/.env.example apps/api/.env
+cp apps/frontend/.env.example apps/frontend/.env
+
 docker compose up -d --build
 ```
 
