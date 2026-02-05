@@ -10,7 +10,7 @@ import {
   getPayment,
   pay,
   PayResult,
-  subscribeToInvoices,
+  subscribeToInvoice,
 } from 'lightning';
 import {
   nodes
@@ -22,27 +22,12 @@ import {
   getInvoices,
   getPayments,
   updatePayment,
+  selectPaymentByHash,
+  selectInvoiceByHash,
 } from '../db/queries/postgres.queries';
 import SocketService from '../services/socket.service';
 
 const socket = SocketService.getInstance();
-
-const invoicesUpdate = subscribeToInvoices({
-  lnd: nodes.receiver.lnd,
-});
-
-invoicesUpdate.on('invoice_updated', async (invoice) => {
-  await pool.query(updatePayment, [
-    invoice.confirmed_at,
-    invoice.id,
-  ]);
-
-  // emit after writing to database to ensure data consistency
-  socket.emitEvent('invoice:updated', {
-    id: invoice.id,
-    confirmed: invoice.confirmed_at,
-  });
-});
 
 export const generateInvoice = async (req: Request, res: Response) => {
   const { amount, memo, nodeUrl, nodeCert, nodeMacaroon } = req.body;
@@ -62,7 +47,25 @@ export const generateInvoice = async (req: Request, res: Response) => {
 
     const decodedPayment = await decodePaymentRequest({
       request: invoice.request,
-      lnd: nodes.receiver.lnd
+      lnd: lnd,
+    });
+
+    const invoicesUpdate = subscribeToInvoice({
+      id: invoice.id,
+      lnd: lnd,
+    });
+
+    invoicesUpdate.on('invoice_updated', async (invoice) => {
+      await pool.query(updatePayment, [
+        invoice.confirmed_at,
+        invoice.id,
+      ]);
+
+      // emit after writing to database to ensure data consistency
+      socket.emitEvent('invoice:updated', {
+        id: invoice.id,
+        confirmed: invoice.confirmed_at,
+      });
     });
     
     await pool.query(insertInvoice, [
@@ -95,12 +98,19 @@ export const generateInvoice = async (req: Request, res: Response) => {
 
 export const getInvoiceByHash = async (req: Request, res: Response) => {
   try {
-    const invoice = await getInvoice({
+    const nodeInvoice = await getInvoice({
       id: req.params.payment_hash,
       lnd: nodes.receiver.lnd,
     });
 
-    res.json({ invoice });
+    const dbInvoice = await pool.query(selectInvoiceByHash, [
+      req.params.payment_hash
+    ]);
+
+    res.json({
+      node: nodeInvoice,
+      db: dbInvoice.rows,
+    });
   } catch (e) {
     res.status(500).json({
       error: e
@@ -120,7 +130,7 @@ export const payment = async (req: Request, res: Response) => {
 
     const decodedPayment = await decodePaymentRequest({
       request: paymentRequest,
-      lnd: nodes.receiver.lnd
+      lnd: lnd
     });
 
     const payment: PayResult = await pay({
@@ -157,12 +167,19 @@ export const payment = async (req: Request, res: Response) => {
 
 export const getPaymentByHash = async (req: Request, res: Response) => {
   try {
-    const payment = await getPayment({
+    const nodePayment = await getPayment({
       id: req.params.payment_hash,
       lnd: nodes.sender.lnd,
     });
 
-    res.json({ payment });
+    const dbPayment = await pool.query(selectPaymentByHash, [
+      req.params.payment_hash
+    ]);
+
+    res.json({
+      node: nodePayment,
+      db: dbPayment.rows,
+    });
   } catch (e) {
     res.status(500).json({
       error: e

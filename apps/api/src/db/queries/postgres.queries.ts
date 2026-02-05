@@ -17,3 +17,11 @@ export const getPayments =
 export const updatePayment =
   `UPDATE payments SET confirmed_at = $1 WHERE id = $2`
 ;
+
+export const selectInvoiceByHash =
+  `SELECT * FROM invoices WHERE id = $1`
+;
+
+export const selectPaymentByHash =
+  `SELECT * FROM payments WHERE id = $1`
+;
