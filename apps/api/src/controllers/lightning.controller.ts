@@ -46,7 +46,6 @@ invoicesUpdate.on('invoice_updated', async (invoice) => {
 
 export const generateInvoice = async (req: Request, res: Response) => {
   const { amount, memo, nodeUrl, nodeCert, nodeMacaroon } = req.body;
-  console.log(req.body)
 
   try {
     const { lnd } = authenticatedLndGrpc({

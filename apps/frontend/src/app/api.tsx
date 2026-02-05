@@ -25,3 +25,14 @@ export async function payInvoice(paymentRequest: string, nodeUrl: string, nodeCe
 
   return res.json();
 }
+
+export async function getTransactions() {
+  const res = await fetch(`${API_URL}/api/transactions`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  return res.json();
+}

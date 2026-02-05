@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import { createInvoice, payInvoice } from "./api";
+import { createInvoice, getTransactions, payInvoice } from "./api";
 import { QR } from "../components/qr";
 import appConfig from "../config/app.config";
 
@@ -23,6 +23,7 @@ export function App() {
   const [payment, setPayment] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [payed, setPayed] = useState('☠️ Invoice not payed');
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     const socket = io(appConfig.apiUrl);
@@ -45,6 +46,7 @@ export function App() {
     setLoading(false);
     setPayed('☠️ Invoice not payed');
   };
+  
   const handlePayInvoice = async () => {
     setLoading(true);
     const payment = await payInvoice(
@@ -54,6 +56,13 @@ export function App() {
       payerMacaroon
     );
     setPayment(payment);
+    setLoading(false);
+  };
+  
+  const handleTransactions = async () => {
+    setLoading(true);
+    const transactions = await getTransactions();
+    setTransactions(transactions);
     setLoading(false);
   };
 
@@ -132,6 +141,16 @@ export function App() {
           <pre>{JSON.stringify(payment, null, 2)}</pre>
         </section>
       )}
+
+      <section>
+        <h2>Transactions</h2>
+        
+        <button onClick={handleTransactions} disabled={loading}>
+          Get transactions
+        </button>
+
+        <pre>{JSON.stringify({transactions}, null, 2)}</pre>
+      </section>
     </div>
   );
 }
