@@ -12,9 +12,6 @@ import {
   PayResult,
   subscribeToInvoice,
 } from 'lightning';
-import {
-  nodes
-} from '../services/lnd.services';
 import pool from '../db/postgres';
 import {
   insertInvoice,
@@ -98,19 +95,11 @@ export const generateInvoice = async (req: Request, res: Response) => {
 
 export const getInvoiceByHash = async (req: Request, res: Response) => {
   try {
-    const nodeInvoice = await getInvoice({
-      id: req.params.payment_hash,
-      lnd: nodes.receiver.lnd,
-    });
-
-    const dbInvoice = await pool.query(selectInvoiceByHash, [
+    const invoice = await pool.query(selectInvoiceByHash, [
       req.params.payment_hash
     ]);
 
-    res.json({
-      node: nodeInvoice,
-      db: dbInvoice.rows,
-    });
+    res.json(invoice.rows);
   } catch (e) {
     res.status(500).json({
       error: e
@@ -167,19 +156,11 @@ export const payment = async (req: Request, res: Response) => {
 
 export const getPaymentByHash = async (req: Request, res: Response) => {
   try {
-    const nodePayment = await getPayment({
-      id: req.params.payment_hash,
-      lnd: nodes.sender.lnd,
-    });
-
-    const dbPayment = await pool.query(selectPaymentByHash, [
+    const payment = await pool.query(selectPaymentByHash, [
       req.params.payment_hash
     ]);
 
-    res.json({
-      node: nodePayment,
-      db: dbPayment.rows,
-    });
+    res.json(payment.rows);
   } catch (e) {
     res.status(500).json({
       error: e
