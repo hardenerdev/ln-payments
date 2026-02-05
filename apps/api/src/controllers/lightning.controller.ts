@@ -105,6 +105,11 @@ export const payment = async (req: Request, res: Response) => {
   const { paymentRequest } = req.body;
 
   try {
+    const decodedPayment = await decodePaymentRequest({
+      request: paymentRequest,
+      lnd: nodes.receiver.lnd
+    });
+
     const payment: PayResult = await pay({
       lnd: nodes.sender.lnd,
       request: paymentRequest,
