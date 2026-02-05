@@ -97,11 +97,11 @@ Each service has its own `.env.example` environment file. This examples will wor
 |---|---|---|
 | VITE_API_URL | api service URL | http://api:3000 |
 | VITE_EMITTER_SOCKET | invoice emitter URL | polar-n1-bob:10009 |
-| VITE_EMITTER_CERT | invoice emitter HEX TLS cert | <hex string> |
-| VITE_EMITTER_MACAROON | invoice emitter HEX admin macaroon | <hex string> |
+| VITE_EMITTER_CERT | invoice emitter HEX TLS cert | some hex string |
+| VITE_EMITTER_MACAROON | invoice emitter HEX admin macaroon | some hex string |
 | VITE_PAYER_SOCKET | invoice payer URL | polar-n1-alice:10009 |
-| VITE_PAYER_CERT | invoice payer HEX TLS cert | <hex string> |
-| VITE_PAYER_MACAROON | invoice payer HEX admin macaroon | <hex string> |
+| VITE_PAYER_CERT | invoice payer HEX TLS cert | some hex string |
+| VITE_PAYER_MACAROON | invoice payer HEX admin macaroon | some hex string |
 
 Please, modify to fit your needs.
 
